@@ -11,6 +11,10 @@ public class CraftBoat extends CraftVehicle implements Boat {
         super(server, entity);
     }
 
+    public float getDamage() {
+        return getHandle().getDamage();
+    }
+
     public double getMaxSpeed() {
         return getHandle().maxSpeed;
     }
