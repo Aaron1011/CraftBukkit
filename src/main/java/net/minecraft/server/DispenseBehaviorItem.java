@@ -9,21 +9,21 @@ public class DispenseBehaviorItem implements IDispenseBehavior {
 
     public DispenseBehaviorItem() {}
 
-    public final ItemStack a(ISourceBlock isourceblock, ItemStack itemstack) {
-        ItemStack itemstack1 = this.b(isourceblock, itemstack);
+    public final ItemStack a(ISourceBlock isourceblock, ItemStack itemstack, int slot) { // CraftBukkit start - add the slot parameter
+        ItemStack itemstack1 = this.b(isourceblock, itemstack, slot); // CraftBukkit end
 
         this.a(isourceblock);
         this.a(isourceblock, BlockDispenser.b(isourceblock.h()));
         return itemstack1;
     }
 
-    protected ItemStack b(ISourceBlock isourceblock, ItemStack itemstack) {
+    protected ItemStack b(ISourceBlock isourceblock, ItemStack itemstack, int slot) { // CraftBukkit - add the slot parameter
         EnumFacing enumfacing = BlockDispenser.b(isourceblock.h());
         IPosition iposition = BlockDispenser.a(isourceblock);
         ItemStack itemstack1 = itemstack.a(1);
 
         // CraftBukkit start
-        if (!a(isourceblock.k(), itemstack1, 6, enumfacing, isourceblock)) {
+        if (!a(isourceblock.k(), itemstack1, 6, enumfacing, isourceblock, slot)) {
             itemstack.count++;
         }
         // CraftBukkit end
@@ -32,7 +32,7 @@ public class DispenseBehaviorItem implements IDispenseBehavior {
     }
 
     // CraftBukkit start - void -> boolean return, IPosition -> ISourceBlock last argument
-    public static boolean a(World world, ItemStack itemstack, int i, EnumFacing enumfacing, ISourceBlock isourceblock) {
+    public static boolean a(World world, ItemStack itemstack, int i, EnumFacing enumfacing, ISourceBlock isourceblock, int slot) { // CraftBukkit - add the slot parameter
         IPosition iposition = BlockDispenser.a(isourceblock);
         // CraftBukkit end
         double d0 = iposition.getX();
@@ -52,7 +52,7 @@ public class DispenseBehaviorItem implements IDispenseBehavior {
         org.bukkit.block.Block block = world.getWorld().getBlockAt(isourceblock.getBlockX(), isourceblock.getBlockY(), isourceblock.getBlockZ());
         CraftItemStack craftItem = CraftItemStack.asCraftMirror(itemstack);
 
-        BlockDispenseEvent event = new BlockDispenseEvent(block, craftItem.clone(), new org.bukkit.util.Vector(entityitem.motX, entityitem.motY, entityitem.motZ));
+        BlockDispenseEvent event = new BlockDispenseEvent(block, craftItem.clone(), new org.bukkit.util.Vector(entityitem.motX, entityitem.motY, entityitem.motZ), slot);
         if (!BlockDispenser.eventFired) {
             world.getServer().getPluginManager().callEvent(event);
         }
@@ -71,7 +71,7 @@ public class DispenseBehaviorItem implements IDispenseBehavior {
             ItemStack eventStack = CraftItemStack.asNMSCopy(event.getItem());
             IDispenseBehavior idispensebehavior = (IDispenseBehavior) BlockDispenser.a.get(eventStack.getItem());
             if (idispensebehavior != IDispenseBehavior.a && idispensebehavior.getClass() != DispenseBehaviorItem.class) {
-                idispensebehavior.a(isourceblock, eventStack);
+                idispensebehavior.a(isourceblock, eventStack, slot);
             } else {
                 world.addEntity(entityitem);
             }

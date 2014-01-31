@@ -11,7 +11,7 @@ final class DispenseBehaviorMinecart extends DispenseBehaviorItem {
 
     DispenseBehaviorMinecart() {}
 
-    public ItemStack b(ISourceBlock isourceblock, ItemStack itemstack) {
+    public ItemStack b(ISourceBlock isourceblock, ItemStack itemstack, int slot) { // CraftBukkit - add the slot parameter
         EnumFacing enumfacing = BlockDispenser.b(isourceblock.h());
         World world = isourceblock.k();
         double d0 = isourceblock.getX() + (double) ((float) enumfacing.getAdjacentX() * 1.125F);
@@ -27,7 +27,7 @@ final class DispenseBehaviorMinecart extends DispenseBehaviorItem {
             d3 = 0.0D;
         } else {
             if (block.getMaterial() != Material.AIR || !BlockMinecartTrackAbstract.a(world.getType(i, j - 1, k))) {
-                return this.b.a(isourceblock, itemstack);
+                return this.b.a(isourceblock, itemstack, slot); // CraftBukkit - pass in the slot used
             }
 
             d3 = -1.0D;
@@ -38,7 +38,7 @@ final class DispenseBehaviorMinecart extends DispenseBehaviorItem {
         org.bukkit.block.Block block2 = world.getWorld().getBlockAt(isourceblock.getBlockX(), isourceblock.getBlockY(), isourceblock.getBlockZ());
         CraftItemStack craftItem = CraftItemStack.asCraftMirror(itemstack1);
 
-        BlockDispenseEvent event = new BlockDispenseEvent(block2, craftItem.clone(), new org.bukkit.util.Vector(d0, d1 + d3, d2));
+        BlockDispenseEvent event = new BlockDispenseEvent(block2, craftItem.clone(), new org.bukkit.util.Vector(d0, d1 + d3, d2), slot);
         if (!BlockDispenser.eventFired) {
             world.getServer().getPluginManager().callEvent(event);
         }
@@ -54,7 +54,7 @@ final class DispenseBehaviorMinecart extends DispenseBehaviorItem {
             ItemStack eventStack = CraftItemStack.asNMSCopy(event.getItem());
             IDispenseBehavior idispensebehavior = (IDispenseBehavior) BlockDispenser.a.get(eventStack.getItem());
             if (idispensebehavior != IDispenseBehavior.a && idispensebehavior != this) {
-                idispensebehavior.a(isourceblock, eventStack);
+                idispensebehavior.a(isourceblock, eventStack, slot);
                 return itemstack;
             }
         }

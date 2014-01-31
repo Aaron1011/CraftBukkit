@@ -11,7 +11,7 @@ final class DispenseBehaviorEmptyBucket extends DispenseBehaviorItem {
 
     DispenseBehaviorEmptyBucket() {}
 
-    public ItemStack b(ISourceBlock isourceblock, ItemStack itemstack) {
+    public ItemStack b(ISourceBlock isourceblock, ItemStack itemstack, int slot) { // CraftBukkit - add the slot parameter
         EnumFacing enumfacing = BlockDispenser.b(isourceblock.h());
         World world = isourceblock.k();
         int i = isourceblock.getBlockX() + enumfacing.getAdjacentX();
@@ -25,7 +25,7 @@ final class DispenseBehaviorEmptyBucket extends DispenseBehaviorItem {
             item = Items.WATER_BUCKET;
         } else {
             if (!Material.LAVA.equals(material) || l != 0) {
-                return super.b(isourceblock, itemstack);
+                return super.b(isourceblock, itemstack, slot);
             }
 
             item = Items.LAVA_BUCKET;
@@ -35,7 +35,7 @@ final class DispenseBehaviorEmptyBucket extends DispenseBehaviorItem {
         org.bukkit.block.Block block = world.getWorld().getBlockAt(isourceblock.getBlockX(), isourceblock.getBlockY(), isourceblock.getBlockZ());
         CraftItemStack craftItem = CraftItemStack.asCraftMirror(itemstack);
 
-        BlockDispenseEvent event = new BlockDispenseEvent(block, craftItem.clone(), new org.bukkit.util.Vector(i, j, k));
+        BlockDispenseEvent event = new BlockDispenseEvent(block, craftItem.clone(), new org.bukkit.util.Vector(i, j, k), slot);
         if (!BlockDispenser.eventFired) {
             world.getServer().getPluginManager().callEvent(event);
         }
@@ -49,7 +49,7 @@ final class DispenseBehaviorEmptyBucket extends DispenseBehaviorItem {
             ItemStack eventStack = CraftItemStack.asNMSCopy(event.getItem());
             IDispenseBehavior idispensebehavior = (IDispenseBehavior) BlockDispenser.a.get(eventStack.getItem());
             if (idispensebehavior != IDispenseBehavior.a && idispensebehavior != this) {
-                idispensebehavior.a(isourceblock, eventStack);
+                idispensebehavior.a(isourceblock, eventStack, slot);
                 return itemstack;
             }
         }
@@ -60,7 +60,7 @@ final class DispenseBehaviorEmptyBucket extends DispenseBehaviorItem {
             itemstack.setItem(item);
             itemstack.count = 1;
         } else if (((TileEntityDispenser) isourceblock.getTileEntity()).addItem(new ItemStack(item)) < 0) {
-            this.b.a(isourceblock, new ItemStack(item));
+            this.b.a(isourceblock, new ItemStack(item), slot); // CraftBukkit - pass in the slot used
         }
 
         return itemstack;

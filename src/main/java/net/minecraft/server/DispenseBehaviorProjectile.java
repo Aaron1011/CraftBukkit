@@ -9,7 +9,7 @@ public abstract class DispenseBehaviorProjectile extends DispenseBehaviorItem {
 
     public DispenseBehaviorProjectile() {}
 
-    public ItemStack b(ISourceBlock isourceblock, ItemStack itemstack) {
+    public ItemStack b(ISourceBlock isourceblock, ItemStack itemstack, int slot) { // CraftBukkit - add the slot parameter
         World world = isourceblock.k();
         IPosition iposition = BlockDispenser.a(isourceblock);
         EnumFacing enumfacing = BlockDispenser.b(isourceblock.h());
@@ -20,7 +20,7 @@ public abstract class DispenseBehaviorProjectile extends DispenseBehaviorItem {
         org.bukkit.block.Block block = world.getWorld().getBlockAt(isourceblock.getBlockX(), isourceblock.getBlockY(), isourceblock.getBlockZ());
         CraftItemStack craftItem = CraftItemStack.asCraftMirror(itemstack1);
 
-        BlockDispenseEvent event = new BlockDispenseEvent(block, craftItem.clone(), new org.bukkit.util.Vector((double) enumfacing.getAdjacentX(), (double) ((float) enumfacing.getAdjacentY() + 0.1F), (double) enumfacing.getAdjacentZ()));
+        BlockDispenseEvent event = new BlockDispenseEvent(block, craftItem.clone(), new org.bukkit.util.Vector((double) enumfacing.getAdjacentX(), (double) ((float) enumfacing.getAdjacentY() + 0.1F), (double) enumfacing.getAdjacentZ()), slot);
         if (!BlockDispenser.eventFired) {
             world.getServer().getPluginManager().callEvent(event);
         }
@@ -36,7 +36,7 @@ public abstract class DispenseBehaviorProjectile extends DispenseBehaviorItem {
             ItemStack eventStack = CraftItemStack.asNMSCopy(event.getItem());
             IDispenseBehavior idispensebehavior = (IDispenseBehavior) BlockDispenser.a.get(eventStack.getItem());
             if (idispensebehavior != IDispenseBehavior.a && idispensebehavior != this) {
-                idispensebehavior.a(isourceblock, eventStack);
+                idispensebehavior.a(isourceblock, eventStack, slot); // CraftBukkit - pass in the slot used
                 return itemstack;
             }
         }

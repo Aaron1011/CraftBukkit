@@ -11,7 +11,7 @@ final class DispenseBehaviorFireball extends DispenseBehaviorItem {
 
     DispenseBehaviorFireball() {}
 
-    public ItemStack b(ISourceBlock isourceblock, ItemStack itemstack) {
+    public ItemStack b(ISourceBlock isourceblock, ItemStack itemstack, int slot) { // CraftBukkit - add the slot parameter
         EnumFacing enumfacing = BlockDispenser.b(isourceblock.h());
         IPosition iposition = BlockDispenser.a(isourceblock);
         double d0 = iposition.getX() + (double) ((float) enumfacing.getAdjacentX() * 0.3F);
@@ -28,7 +28,7 @@ final class DispenseBehaviorFireball extends DispenseBehaviorItem {
         org.bukkit.block.Block block = world.getWorld().getBlockAt(isourceblock.getBlockX(), isourceblock.getBlockY(), isourceblock.getBlockZ());
         CraftItemStack craftItem = CraftItemStack.asCraftMirror(itemstack1);
 
-        BlockDispenseEvent event = new BlockDispenseEvent(block, craftItem.clone(), new org.bukkit.util.Vector(d3, d4, d5));
+        BlockDispenseEvent event = new BlockDispenseEvent(block, craftItem.clone(), new org.bukkit.util.Vector(d3, d4, d5), slot);
         if (!BlockDispenser.eventFired) {
             world.getServer().getPluginManager().callEvent(event);
         }
@@ -44,7 +44,7 @@ final class DispenseBehaviorFireball extends DispenseBehaviorItem {
             ItemStack eventStack = CraftItemStack.asNMSCopy(event.getItem());
             IDispenseBehavior idispensebehavior = (IDispenseBehavior) BlockDispenser.a.get(eventStack.getItem());
             if (idispensebehavior != IDispenseBehavior.a && idispensebehavior != this) {
-                idispensebehavior.a(isourceblock, eventStack);
+                idispensebehavior.a(isourceblock, eventStack, slot); // CraftBukkit - pass in the slot used
                 return itemstack;
             }
         }

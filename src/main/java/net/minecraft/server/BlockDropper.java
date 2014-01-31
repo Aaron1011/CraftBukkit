@@ -62,7 +62,7 @@ public class BlockDropper extends BlockDispenser {
                         itemstack1 = itemstack.cloneItemStack();
                     }
                 } else {
-                    itemstack1 = this.P.a(sourceblock, itemstack);
+                    itemstack1 = this.P.a(sourceblock, itemstack, l); // CraftBukkit - pass in the slot used
                     if (itemstack1 != null && itemstack1.count == 0) {
                         itemstack1 = null;
                     }

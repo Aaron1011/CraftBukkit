@@ -11,7 +11,7 @@ final class DispenseBehaviorBonemeal extends DispenseBehaviorItem {
 
     DispenseBehaviorBonemeal() {}
 
-    protected ItemStack b(ISourceBlock isourceblock, ItemStack itemstack) {
+    protected ItemStack b(ISourceBlock isourceblock, ItemStack itemstack, int slot) { // CraftBukkit - add the slot parameter
         if (itemstack.getData() == 15) {
             EnumFacing enumfacing = BlockDispenser.b(isourceblock.h());
             World world = isourceblock.k();
@@ -23,7 +23,7 @@ final class DispenseBehaviorBonemeal extends DispenseBehaviorItem {
             org.bukkit.block.Block block = world.getWorld().getBlockAt(isourceblock.getBlockX(), isourceblock.getBlockY(), isourceblock.getBlockZ());
             CraftItemStack craftItem = CraftItemStack.asNewCraftStack(itemstack.getItem());
 
-            BlockDispenseEvent event = new BlockDispenseEvent(block, craftItem.clone(), new org.bukkit.util.Vector(0, 0, 0));
+            BlockDispenseEvent event = new BlockDispenseEvent(block, craftItem.clone(), new org.bukkit.util.Vector(0, 0, 0), slot);
             if (!BlockDispenser.eventFired) {
                 world.getServer().getPluginManager().callEvent(event);
             }
@@ -37,7 +37,7 @@ final class DispenseBehaviorBonemeal extends DispenseBehaviorItem {
                 ItemStack eventStack = CraftItemStack.asNMSCopy(event.getItem());
                 IDispenseBehavior idispensebehavior = (IDispenseBehavior) BlockDispenser.a.get(eventStack.getItem());
                 if (idispensebehavior != IDispenseBehavior.a && idispensebehavior != this) {
-                    idispensebehavior.a(isourceblock, eventStack);
+                    idispensebehavior.a(isourceblock, eventStack, slot);
                     return itemstack;
                 }
             }
@@ -53,7 +53,7 @@ final class DispenseBehaviorBonemeal extends DispenseBehaviorItem {
 
             return itemstack;
         } else {
-            return super.b(isourceblock, itemstack);
+            return super.b(isourceblock, itemstack, slot); // CraftBukkit - pass in the slot used
         }
     }
 

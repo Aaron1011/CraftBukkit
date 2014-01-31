@@ -11,7 +11,7 @@ final class DispenseBehaviorArmor extends DispenseBehaviorItem {
 
     DispenseBehaviorArmor() {}
 
-    protected ItemStack b(ISourceBlock isourceblock, ItemStack itemstack) {
+    protected ItemStack b(ISourceBlock isourceblock, ItemStack itemstack, int slot) { // CraftBukkit - add the slot parameter
         EnumFacing enumfacing = BlockDispenser.b(isourceblock.h());
         int i = isourceblock.getBlockX() + enumfacing.getAdjacentX();
         int j = isourceblock.getBlockY() + enumfacing.getAdjacentY();
@@ -30,7 +30,7 @@ final class DispenseBehaviorArmor extends DispenseBehaviorItem {
             org.bukkit.block.Block block = world.getWorld().getBlockAt(isourceblock.getBlockX(), isourceblock.getBlockY(), isourceblock.getBlockZ());
             CraftItemStack craftItem = CraftItemStack.asCraftMirror(itemstack1);
 
-            BlockDispenseEvent event = new BlockDispenseEvent(block, craftItem.clone(), new org.bukkit.util.Vector(0, 0, 0));
+            BlockDispenseEvent event = new BlockDispenseEvent(block, craftItem.clone(), new org.bukkit.util.Vector(0, 0, 0), slot);
             if (!BlockDispenser.eventFired) {
                 world.getServer().getPluginManager().callEvent(event);
             }
@@ -46,7 +46,7 @@ final class DispenseBehaviorArmor extends DispenseBehaviorItem {
                 ItemStack eventStack = CraftItemStack.asNMSCopy(event.getItem());
                 IDispenseBehavior idispensebehavior = (IDispenseBehavior) BlockDispenser.a.get(eventStack.getItem());
                 if (idispensebehavior != IDispenseBehavior.a && idispensebehavior != this) {
-                    idispensebehavior.a(isourceblock, eventStack);
+                    idispensebehavior.a(isourceblock, eventStack, slot);
                     return itemstack;
                 }
             }
@@ -61,7 +61,7 @@ final class DispenseBehaviorArmor extends DispenseBehaviorItem {
             // --itemstack.count; // CraftBukkit - handled above
             return itemstack;
         } else {
-            return super.b(isourceblock, itemstack);
+            return super.b(isourceblock, itemstack, slot); // CraftBukkit - pass in the slot used
         }
     }
 }

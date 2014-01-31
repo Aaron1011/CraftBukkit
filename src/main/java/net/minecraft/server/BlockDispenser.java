@@ -79,7 +79,7 @@ public class BlockDispenser extends BlockContainer {
                 IDispenseBehavior idispensebehavior = this.a(itemstack);
 
                 if (idispensebehavior != IDispenseBehavior.a) {
-                    ItemStack itemstack1 = idispensebehavior.a(sourceblock, itemstack);
+                    ItemStack itemstack1 = idispensebehavior.a(sourceblock, itemstack, l); // CraftBukkit - pass in the slot used
                     eventFired = false; // CraftBukkit - reset event status
 
                     tileentitydispenser.setItem(l, itemstack1.count == 0 ? null : itemstack1);
